@@ -38,17 +38,7 @@ def create_playlist(name: str, created_by_user_id: str, is_collaborative: bool =
 def get_playlist_songs(playlist_id: str) -> list[dict]:
     """
     Get the ordered list of songs in a playlist.
-
     Songs are returned in the order they were added (ascending by position).
-
-    Args:
-        playlist_id: The ID of the playlist.
-
-    Returns:
-        A list of song dicts in playlist order.
-
-    Note:
-        This function returns all songs in the playlist.
     """
     playlist = db.session.get(Playlist, playlist_id)
     if not playlist:
@@ -62,8 +52,7 @@ def get_playlist_songs(playlist_id: str) -> list[dict]:
         .order_by(asc(playlist_entries.c.position))
         .all()
     )
-
-    return [song.to_dict() for song in songs[:-1]]
+    return [song.to_dict() for song in songs]
 
 
 def get_playlist(playlist_id: str) -> dict:
