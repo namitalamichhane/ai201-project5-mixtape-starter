@@ -20,15 +20,15 @@ the `add\_to\_playlist` and `rate\_song` code paths side by side). I verified ev
 
 diagnosis myself by reproducing each bug in `flask shell` with controlled inputs
 
-before applying any fix. For Issue #2, there were two valid ways to interpret
+before applying any fix. 
 
-"shows people from yesterday" (shrink the rolling window vs. anchor to calendar
 
-day) — I decided \[state which you picked and why]. For Issue #4, I made a
 
-judgment call on whether re-rating a song should re-notify the sharer — I chose
+For Issue #2, While given the option to simply reduce the rolling hour window (Option A), I chose to implement a strict UTC calendar-day midnight anchor (Option B) to accurately satisfy the user complaint regarding "yesterday's" data filtering out cleanly. I successfully verified this by pushing my test event back to 30 hours to confirm a zero-item return state.
 
-\[state your decision] because \[reason].
+
+
+For Issue #4, I confirmed that the missing notification layer was completely absent from `rate\\\_song`. I chose to enforce a design choice where updating or re-rating a song continues to dispatch a fresh notification to keep the song owner fully updated on score adjustments, while ensuring a strict guard prevents users from receiving notifications for rating their own tracks.
 
 
 
