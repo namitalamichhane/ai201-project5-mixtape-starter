@@ -14,24 +14,15 @@ RECENT_THRESHOLD = timedelta(hours=24)
 
 
 def get_friends_listening_now(user_id: str) -> list[dict]:
-    """
-    Return a list of friends who have listened to something recently,
-    along with the song they were listening to.
-
-    Args:
-        user_id: The ID of the current user.
-
-    Returns:
-        A list of dicts, each with 'friend', 'song', and 'listened_at' keys,
-        ordered by most recent first.
-    """
     user = db.session.get(User, user_id)
     if not user:
         raise ValueError(f"User {user_id} not found")
 
-    cutoff = datetime.now(timezone.utc) - RECENT_THRESHOLD
-    friend_ids = [f.id for f in user.friends]
+# Get the current time and set the cutoff to midnight of today (UTC)
+    now = datetime.now(timezone.utc)
+    cutoff = datetime.combine(now.date(), datetime.min.time(), tzinfo=timezone.utc)
 
+    friend_ids = [f.id for f in user.friends]
     if not friend_ids:
         return []
 
